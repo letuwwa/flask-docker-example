@@ -1,14 +1,16 @@
 import os
 import uuid
+from pathlib import Path
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, request
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
+BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
     "DATABASE_URL",
-    "sqlite:////data/app.db",
+    f"sqlite:///{BASE_DIR / 'app.db'}",
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -35,6 +37,11 @@ class Data(db.Model):
 @app.get("/")
 def index():
     return "Hello from Flask!"
+
+
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok"})
 
 
 @app.post("/data")
