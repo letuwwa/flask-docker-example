@@ -1,3 +1,4 @@
+import os
 import uuid
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, request
@@ -5,7 +6,10 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+    "DATABASE_URL",
+    "sqlite:////data/app.db",
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
