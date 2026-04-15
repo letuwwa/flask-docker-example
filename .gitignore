@@ -51,6 +51,9 @@ coverage.xml
 # Environment variables
 .env
 
+# Flask local state
+instance/
+
 # OS
 .DS_Store
 Thumbs.db
