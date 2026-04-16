@@ -5,9 +5,26 @@ services:
       - "5000:5000"
     environment:
       DATABASE_URL: ${DATABASE_URL:-sqlite:///app.db}
+      MONGO_URI: ${MONGO_URI:-mongodb://admin:secret@mongodb:27017/app?authSource=admin}
+    depends_on:
+      - mongodb
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=2).read()"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-secret}
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
